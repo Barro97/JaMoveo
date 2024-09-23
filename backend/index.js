@@ -28,13 +28,21 @@ async function connectToDb() {
 }
 
 connectToDb(); // Call this function to connect to the database
-// Middleware for preventing the browser's default behavior
+
+// Middleware
+//for preventing the browser's default behavior
 app.use(cors());
+app.use(express.json());
 
 //Starting the server:
 const PORT = process.env.PORT || 5000; //listening to either a global variable of a port or a default local host
 httpServer.listen(PORT, () => {
   console.log(`server running on ${PORT}`);
+});
+
+app.post("/submit", (req, res) => {
+  console.log(req.body);
+  res.send("Form data received");
 });
 
 io.on("connection", (socket) => {

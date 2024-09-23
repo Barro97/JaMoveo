@@ -1,4 +1,6 @@
 import { useState } from "react";
+import axios from "axios";
+const server = "http://localhost:5000";
 function App() {
   return <SignupPage />;
 }
@@ -16,10 +18,17 @@ function SignupPage() {
     setFormData({ ...formData, [name]: value });
   }
 
-  function handleSubmit(e) {
-    e.preventdefault();
+  async function handleSubmit(e) {
+    e.preventDefault();
+    try {
+      const response = await axios.post(`${server}/submit`, formData);
+      console.log("Response:", response.data);
+    } catch (error) {
+      console.log(error);
+    }
     console.log(formData);
   }
+
   return (
     <div className="signup-container">
       <form className="signup-form" onSubmit={handleSubmit}>
