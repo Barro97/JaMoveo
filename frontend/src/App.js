@@ -9,26 +9,27 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/" element={<AuthPage mode="login" />} />
+        <Route path="/signup" element={<AuthPage mode="signup" />} />
       </Routes>
     </Router>
   );
 }
 
-function LoginPage() {
-  const initialValues = {
-    username: "",
-    password: "",
-  };
+function AuthPage({ mode }) {
+  const isLogin = mode === "login";
+  const initialValues = isLogin
+    ? { username: "", password: "" }
+    : { username: "", password: "", instrument: "", type: "player" };
+
   const { formData, handleChange, handleSubmit } = useForm(
     initialValues,
     server,
-    "login"
+    isLogin ? "login" : "create-user"
   );
 
   return (
-    <Form handleSubmit={handleSubmit} type="Log In">
+    <Form handleSubmit={handleSubmit} type={isLogin ? "Log In" : "Sign Up"}>
       <Field
         type="text"
         purpose="username"
@@ -41,43 +42,14 @@ function LoginPage() {
         value={formData.password}
         handleChange={handleChange}
       />
-    </Form>
-  );
-}
-
-function SignupPage() {
-  const initialValues = {
-    username: "",
-    password: "",
-    instrument: "",
-    type: "player",
-  };
-  const { formData, handleChange, handleSubmit } = useForm(
-    initialValues,
-    server,
-    "create-user"
-  );
-
-  return (
-    <Form handleSubmit={handleSubmit} type="Sign Up">
-      <Field
-        type="text"
-        purpose="username"
-        value={formData.username}
-        handleChange={handleChange}
-      />
-      <Field
-        type="password"
-        purpose="password"
-        value={formData.password}
-        handleChange={handleChange}
-      />
-      <Field
-        type="text"
-        purpose="instrument"
-        value={formData.instrument}
-        handleChange={handleChange}
-      />
+      {!isLogin && (
+        <Field
+          type="text"
+          purpose="instrument"
+          value={formData.instrument}
+          handleChange={handleChange}
+        />
+      )}
     </Form>
   );
 }
