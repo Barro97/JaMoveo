@@ -10,6 +10,7 @@ function SignupPage() {
     username: "",
     password: "",
     instrument: "",
+    type: "player",
   });
 
   // A function that handles field change:
@@ -23,6 +24,12 @@ function SignupPage() {
     try {
       const response = await axios.post(`${server}/submit`, formData);
       console.log("Response:", response.data);
+      setFormData({
+        username: "",
+        password: "",
+        instrument: "",
+        type: "player",
+      });
     } catch (error) {
       console.log(error);
     }

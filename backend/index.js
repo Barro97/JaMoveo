@@ -32,6 +32,7 @@ connectToDb(); // Call this function to connect to the database
 // Middleware
 //for preventing the browser's default behavior
 app.use(cors());
+// For parsing json files:
 app.use(express.json());
 
 //Starting the server:
@@ -40,9 +41,16 @@ httpServer.listen(PORT, () => {
   console.log(`server running on ${PORT}`);
 });
 
-app.post("/submit", (req, res) => {
-  console.log(req.body);
-  res.send("Form data received");
+app.post("/submit", async (req, res) => {
+  // console.log(req.body);
+  const formData = req.body;
+  const users = db.collection("Users");
+  try {
+    await users.insertOne(formData);
+    res.send({ message: "Form data received:", data: formData });
+  } catch (err) {
+    console.log("error", err);
+  }
 });
 
 io.on("connection", (socket) => {
