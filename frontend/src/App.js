@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
@@ -17,8 +17,29 @@ function App() {
           path="/signup"
           element={<AuthPage mode="signup" socket={socket} />}
         />
+        <Route path="/main" element={<Main />} />
       </Routes>
     </Router>
+  );
+}
+
+function Main() {
+  const [user, setUser] = useState({});
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    socket.on("currentUser", (loggedUser) => {
+      // An empty object means this user just logged in
+      if (Object.keys(user).length === 0) {
+        setUser(loggedUser);
+        setIsAdmin(loggedUser.type === "admin");
+      }
+    });
+  }, [user]);
+  return (
+    <h1>
+      Hello {user.username} , you are {isAdmin ? "an admin" : "a player"}
+    </h1>
   );
 }
 

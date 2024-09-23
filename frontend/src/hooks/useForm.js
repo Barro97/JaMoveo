@@ -1,12 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 // A custom hook to improve reusability and minimize duplicate code
-function useForm(socket, initialValues, server, type) {
+function useForm(socket, initialValues, server, route) {
   const [formData, setFormData] = useState(initialValues);
-  //   useEffect(() => {
-  //     setFormData(initialValues);
-  //   }, [initialValues]);
+  const navigate = useNavigate();
   function handleChange(e) {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -17,11 +16,12 @@ function useForm(socket, initialValues, server, type) {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      const response = await axios.post(`${server}/${type}`, formData);
+      const response = await axios.post(`${server}/${route}`, formData);
       console.log("response:", response.data.user);
       setFormData(initialValues);
-      if (type === "login") {
+      if (route === "login") {
         socket.emit("joinRoom", response.data.user);
+        navigate("/main");
       }
     } catch (error) {
       console.log(error);

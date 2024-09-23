@@ -72,6 +72,7 @@ io.on("connection", (socket) => {
   console.log("A user connected");
   socket.on("joinRoom", (user) => {
     room.push(user);
+    socket.emit("currentUser", user);
     console.log("Room content: ", room);
   });
 });
