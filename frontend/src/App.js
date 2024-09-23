@@ -9,6 +9,7 @@ const server = "http://localhost:5000";
 const socket = io("http://localhost:5000");
 
 function App() {
+  //Renders comps based on active routes
   return (
     <Router>
       <Routes>
@@ -24,14 +25,13 @@ function App() {
 }
 
 function Main() {
+  //Determine states based on session storage (Makes it so that data does not disappear upon reloading page)
   const [user, setUser] = useState(() => {
-    // Retrieve the user from sessionStorage if it exists
     const savedUser = sessionStorage.getItem("user");
     return savedUser ? JSON.parse(savedUser) : {};
   });
 
   const [isAdmin, setIsAdmin] = useState(() => {
-    // Retrieve isAdmin from sessionStorage if it exists
     const savedIsAdmin = sessionStorage.getItem("isAdmin");
     return savedIsAdmin ? JSON.parse(savedIsAdmin) : false;
   });
@@ -70,7 +70,7 @@ function Main() {
 }
 
 function AuthPage({ mode, socket }) {
-  const isLogin = mode === "login";
+  const isLogin = mode === "login"; // A bool to determine conditional rendering and submission logic
   const initialValues = isLogin
     ? { username: "", password: "" }
     : { username: "", password: "", instrument: "", type: "player" };
