@@ -41,8 +41,7 @@ httpServer.listen(PORT, () => {
   console.log(`server running on ${PORT}`);
 });
 
-app.post("/submit", async (req, res) => {
-  // console.log(req.body);
+app.post("/create-user", async (req, res) => {
   const formData = req.body;
   const users = db.collection("Users");
   try {
@@ -50,6 +49,17 @@ app.post("/submit", async (req, res) => {
     res.send({ message: "Form data received:", data: formData });
   } catch (err) {
     console.log("error", err);
+  }
+});
+app.post("/login", async (req, res) => {
+  console.log(req.body);
+  const formData = req.body;
+  const users = db.collection("Users");
+  try {
+    const user = await users.findOne(formData);
+    res.send({ message: "User found:", data: user });
+  } catch (err) {
+    console.log("Error, user not found:", err);
   }
 });
 

@@ -6,14 +6,14 @@ body {
   background-color: #d3d3d3; /* Light grey background */
 }
 
-.signup-container {
+.form-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
 }
 
-.signup-form {
+.form {
   background-color: #ffffff;
   padding: 40px;
   border: 2px solid #00008b; /* Dark blue border */
@@ -21,20 +21,20 @@ body {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.signup-form h2 {
+.form h2 {
   color: #8b0000; /* Dark red text */
   margin-bottom: 20px;
   text-align: center;
 }
 
-.signup-form label {
+.form label {
   display: block;
   margin-bottom: 5px;
   color: #00008b; /* Dark blue labels */
   font-weight: bold;
 }
 
-.signup-form input {
+.form input {
   width: 100%;
   padding: 10px;
   margin-bottom: 15px;
@@ -43,7 +43,7 @@ body {
   box-sizing: border-box;
 }
 
-.signup-form button {
+.form button {
   width: 100%;
   padding: 10px;
   background-color: #8b0000; /* Dark red button */
@@ -54,6 +54,6 @@ body {
   cursor: pointer;
 }
 
-.signup-form button:hover {
+.form button:hover {
   background-color: #a40000; /* Slightly lighter red on hover */
 }
