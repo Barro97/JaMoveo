@@ -24,8 +24,17 @@ function App() {
 }
 
 function Main() {
-  const [user, setUser] = useState({});
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [user, setUser] = useState(() => {
+    // Retrieve the user from sessionStorage if it exists
+    const savedUser = sessionStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : {};
+  });
+
+  const [isAdmin, setIsAdmin] = useState(() => {
+    // Retrieve isAdmin from sessionStorage if it exists
+    const savedIsAdmin = sessionStorage.getItem("isAdmin");
+    return savedIsAdmin ? JSON.parse(savedIsAdmin) : false;
+  });
 
   useEffect(() => {
     socket.on("currentUser", (loggedUser) => {
@@ -35,7 +44,24 @@ function Main() {
         setIsAdmin(loggedUser.type === "admin");
       }
     });
-  }, [user]);
+
+    window.addEventListener("beforeunload", () => {
+      sessionStorage.setItem("user", JSON.stringify(user));
+      sessionStorage.setItem("isAdmin", JSON.stringify(isAdmin));
+    });
+
+    return () => {
+      // Clean up the event listener
+      window.removeEventListener("beforeunload", () => {
+        sessionStorage.setItem("user", JSON.stringify(user));
+        sessionStorage.setItem("isAdmin", JSON.stringify(isAdmin));
+      });
+
+      // Clear sessionStorage when the user navigates away
+      sessionStorage.removeItem("user");
+      sessionStorage.removeItem("isAdmin");
+    };
+  }, [user, isAdmin]);
   return (
     <h1>
       Hello {user.username} , you are {isAdmin ? "an admin" : "a player"}
