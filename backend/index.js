@@ -6,11 +6,13 @@ import { MongoClient } from "mongodb";
 
 const app = express();
 const httpServer = createServer(app);
-const io = new Server(httpServer);
-
-/**
- mongodb+srv://rosenthb:<db_password>@cluster0.j8ajp.mongodb.net/jaMoveo?retryWrites=true&w=majority&appName=Cluster0
- */
+const io = new Server(httpServer, {
+  cors: {
+    origin: "http://localhost:3000", // Allow requests from your client
+    methods: ["GET", "POST"],
+    credentials: true, // Allow credentials if necessary
+  },
+});
 
 const url =
   "mongodb+srv://rosenthb:bO5JHYTfa5hFSN3o@cluster0.j8ajp.mongodb.net/jaMoveo?retryWrites=true&w=majority&appName=Cluster0";
@@ -51,13 +53,16 @@ app.post("/create-user", async (req, res) => {
     console.log("error", err);
   }
 });
+
+// A map for tracking users in room
+const room = [];
 app.post("/login", async (req, res) => {
   console.log(req.body);
   const formData = req.body;
   const users = db.collection("Users");
   try {
     const user = await users.findOne(formData);
-    res.send({ message: "User found:", data: user });
+    res.send({ message: "User found:", user: user });
   } catch (err) {
     console.log("Error, user not found:", err);
   }
@@ -65,4 +70,8 @@ app.post("/login", async (req, res) => {
 
 io.on("connection", (socket) => {
   console.log("A user connected");
+  socket.on("joinRoom", (user) => {
+    room.push(user);
+    console.log("Room content: ", room);
+  });
 });

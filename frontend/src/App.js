@@ -3,26 +3,33 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import useForm from "./hooks/useForm";
+import { io } from "socket.io-client";
 
 const server = "http://localhost:5000";
+const socket = io("http://localhost:5000");
+
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<AuthPage mode="login" />} />
-        <Route path="/signup" element={<AuthPage mode="signup" />} />
+        <Route path="/" element={<AuthPage mode="login" socket={socket} />} />
+        <Route
+          path="/signup"
+          element={<AuthPage mode="signup" socket={socket} />}
+        />
       </Routes>
     </Router>
   );
 }
 
-function AuthPage({ mode }) {
+function AuthPage({ mode, socket }) {
   const isLogin = mode === "login";
   const initialValues = isLogin
     ? { username: "", password: "" }
     : { username: "", password: "", instrument: "", type: "player" };
 
   const { formData, handleChange, handleSubmit } = useForm(
+    socket,
     initialValues,
     server,
     isLogin ? "login" : "create-user"
@@ -61,12 +68,10 @@ function Form({ children, handleSubmit, type }) {
         <h2>{type}</h2>
         {children}
         <button type="submit">{type}</button>
-        {type === "Log In" ? (
+        {type === "Log In" && (
           <p>
             Haven't signed up yet? <Link to="/signup">sign up</Link>
           </p>
-        ) : (
-          ""
         )}
       </form>
     </div>
