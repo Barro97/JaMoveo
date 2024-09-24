@@ -117,10 +117,15 @@ function Header({ user, isAdmin }) {
   }
   return (
     <header>
-      <h1>
-        Hello {user.username} , you are {isAdmin ? "an admin" : "a player"}
-      </h1>
-      <button onClick={disconnect}>Disconnect</button>
+      <div className="header-content">
+        <h1>
+          Welcome, {user.username}{" "}
+          <span className="role-text">{isAdmin ? "admin" : "player"}</span>
+        </h1>
+        <button className="disconnect-button" onClick={disconnect}>
+          Disconnect
+        </button>
+      </div>
     </header>
   );
 }

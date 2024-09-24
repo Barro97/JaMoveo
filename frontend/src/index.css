@@ -188,7 +188,35 @@ footer {
   font-weight: bold;
 }
 
-header button {
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #f5f5f5; /* Light grey background */
+  border-bottom: 2px solid #d3d3d3; /* Subtle border */
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+h1 {
+  font-size: 24px;
+  color: #333;
+  font-weight: 600;
+  margin: 0;
+}
+
+.role-text {
+  font-size: 21px;
+  color: #0073e6; /* Accent color for the role */
+}
+
+.disconnect-button {
   background-color: #8b0000; /* Dark red */
   color: white;
   border: none;
@@ -200,20 +228,16 @@ header button {
   transition: background-color 0.3s, box-shadow 0.3s;
 }
 
-header button:hover {
+.disconnect-button:hover {
   background-color: #a52a2a; /* Slightly lighter red */
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Adds a shadow on hover */
 }
 
-header button:active {
+.disconnect-button:active {
   background-color: #6b0000; /* Darker red on click */
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3); /* Smaller shadow on active */
 }
 
-header button:focus {
+.disconnect-button:focus {
   outline: none;
-}
-
-header {
-  display: flex;
 }
