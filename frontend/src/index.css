@@ -82,10 +82,25 @@ body {
 .song-content {
   margin-top: 30px;
 }
+.word-chord-pair {
+  display: flex;
+  flex-direction: column; /* Stack chord above word */
+  align-items: center;
+  margin-right: 10px;
+}
+.song-line {
+  display: flex;
+  margin-bottom: 10px;
+}
 
+.lyrics {
+  font-size: 1.5em; /* Larger size for lyrics */
+  color: #ffffff; /* White text */
+}
 .chord {
+  font-size: 1.2em; /* Slightly smaller size for chords */
   color: #ffd700; /* Gold color for chords */
-  margin-right: 5px;
+  height: 1.2em;
 }
 
 .auto-scroll-button {

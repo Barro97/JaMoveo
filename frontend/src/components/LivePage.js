@@ -132,12 +132,15 @@ function LivePage() {
         {song.map((line, index) => (
           <div key={index} className="song-line">
             {line.map((word, idx) => (
-              <span key={idx} className="song-word">
-                {!isSinger && word.chords && (
-                  <span className="chord"> {word.chords} </span>
+              <div key={idx} className="word-chord-pair">
+                {!isSinger && (
+                  <span className="chord">
+                    {" "}
+                    {word.chords ? word.chords : ""}{" "}
+                  </span>
                 )}
                 <span className="lyrics"> {word.lyrics} </span>
-              </span>
+              </div>
             ))}
           </div>
         ))}
