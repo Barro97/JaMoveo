@@ -79,4 +79,7 @@ io.on("connection", (socket) => {
     console.log(`song selected:${song}`);
     io.emit("change-page", song);
   });
+  socket.on("quit-song", () => {
+    io.emit("main-page");
+  });
 });

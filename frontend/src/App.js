@@ -28,7 +28,7 @@ function App() {
           element={<AuthPage mode="signup" socket={socket} server={server} />}
         />
         <Route path="/main" element={<Main />} />
-        <Route path="/song" element={<LivePage />} />
+        <Route path="/song" element={<LivePage socket={socket} />} />
       </Routes>
     </Router>
   );

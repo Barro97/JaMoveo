@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 const song = [
   [
     {
@@ -425,7 +426,10 @@ const author = "The Beetles";
 const title = "Hey Jude";
 const isSinger = false;
 const isAdmin = true;
-function LivePage() {
+
+function LivePage({ socket }) {
+  const navigate = useNavigate();
+
   const scrollRef = useRef(null);
 
   const [autoScroll, setAutoScroll] = useState(false);
@@ -461,12 +465,25 @@ function LivePage() {
     };
   }, [autoScroll]);
 
+  function quitSong() {
+    socket.emit("quit-song");
+  }
+
+  useEffect(() => {
+    socket.on("main-page", () => {
+      navigate("/main");
+    });
+  });
   return (
     <>
       <div className="live-page" ref={scrollRef}>
         <h1 className="song-title">{title}</h1>
         <h2 className="song-author">By {author}</h2>
-        {isAdmin && <button className="quit-button">Quit</button>}
+        {isAdmin && (
+          <button className="quit-button" onClick={quitSong}>
+            Quit
+          </button>
+        )}
         <div className="song-content">
           {song.map((line, index) => (
             <div key={index} className="song-line">
