@@ -25,11 +25,17 @@ function App() {
     const savedIsAdmin = sessionStorage.getItem("isAdmin");
     return savedIsAdmin ? JSON.parse(savedIsAdmin) : false;
   });
-
+  const [song, setSong] = useState("");
+  const [isSong, setIsSong] = useState(false);
+  function handleSongSelect(selectedSong) {
+    setSong(selectedSong);
+    setIsSong(true);
+  }
   function handleLogin(loggedUser, admin) {
     setUser(loggedUser);
     setIsAdmin(admin);
   }
+
   //Renders comps based on active routes
   return (
     <Router>
@@ -44,36 +50,49 @@ function App() {
         />
         <Route
           path="/main"
-          element={<Main user={user} isAdmin={isAdmin} onLogin={handleLogin} />}
+          element={
+            <Main
+              user={user}
+              isAdmin={isAdmin}
+              onLogin={handleLogin}
+              onSongSelect={handleSongSelect}
+              song={song}
+              isSong={isSong}
+            />
+          }
         />
         <Route
           path="/song"
-          element={<LivePage socket={socket} user={user} isAdmin={isAdmin} />}
+          element={
+            <LivePage
+              socket={socket}
+              user={user}
+              isAdmin={isAdmin}
+              song={song}
+              handleSongSelect={handleSongSelect}
+            />
+          }
         />
       </Routes>
     </Router>
   );
 }
 
-function Main({ user, isAdmin, onLogin }) {
+function Main({ user, isAdmin, onLogin, onSongSelect, song, isSong }) {
   const navigate = useNavigate(); // Used to navigate to the main page after logging in
 
-  const [song, setSong] = useState("");
-
-  function handleSongSelect(selectedSong) {
-    setSong(selectedSong);
-  }
+  useEffect(() => {
+    if (song && isSong) socket.emit("song-selected", song);
+  }, [song]);
 
   useEffect(() => {
-    socket.on("change-page", (song) => {
+    socket.on("change-page", (selectedSong) => {
+      if (!song) {
+        onSongSelect(selectedSong);
+      }
       navigate("/song");
     });
   });
-
-  useEffect(() => {
-    if (song) socket.emit("song-selected", song);
-  }, [song]);
-
   useEffect(() => {
     socket.on("currentUser", (loggedUser) => {
       console.log("Received user", loggedUser);
@@ -98,7 +117,7 @@ function Main({ user, isAdmin, onLogin }) {
     <>
       <Header user={user} isAdmin={isAdmin} />
       {isAdmin ? (
-        <Search onSongSelect={handleSongSelect} />
+        <Search onSongSelect={onSongSelect} />
       ) : (
         <h2>Waiting for next song...</h2>
       )}

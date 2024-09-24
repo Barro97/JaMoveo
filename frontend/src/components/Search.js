@@ -1,20 +1,19 @@
 import { useState, useEffect } from "react";
+import songs from "../songs";
 
 function Search({ onSongSelect }) {
   const [query, setQuery] = useState("");
-  const [songList, setSongList] = useState([
-    "Shape of You",
-    "Blinding Lights",
-    "Dance Monkey",
-    "Rockstar",
-    "One Dance",
-    "Closer",
-    "Someone You Loved",
-    "Sunflower",
-    "Senorita",
-    "Perfect",
-  ]);
+  const [songList, setSongList] = useState([]);
   const [filteredSongs, setFilteredSongs] = useState([]);
+
+  useEffect(() => {
+    let list = [];
+    list = songs.map((song) => {
+      return song.name;
+    });
+    console.log(list);
+    setSongList(list);
+  }, []);
 
   useEffect(() => {
     const handleSearch = () => {
@@ -74,7 +73,13 @@ function Search({ onSongSelect }) {
           <li
             key={index}
             className="search-list-item"
-            onClick={() => onSongSelect(song)}
+            onClick={() =>
+              onSongSelect(
+                songs.find((songFromArr) => {
+                  return songFromArr.name === song;
+                })
+              )
+            }
           >
             {highlightMatch(song, query)}
           </li>
