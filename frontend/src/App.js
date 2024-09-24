@@ -15,6 +15,21 @@ const server = "http://localhost:5000";
 const socket = io("http://localhost:5000");
 
 function App() {
+  //Determine states based on session storage (Makes it so that data does not disappear upon reloading page)
+  const [user, setUser] = useState(() => {
+    const savedUser = sessionStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : {};
+  });
+
+  const [isAdmin, setIsAdmin] = useState(() => {
+    const savedIsAdmin = sessionStorage.getItem("isAdmin");
+    return savedIsAdmin ? JSON.parse(savedIsAdmin) : false;
+  });
+
+  function handleLogin(loggedUser, admin) {
+    setUser(loggedUser);
+    setIsAdmin(admin);
+  }
   //Renders comps based on active routes
   return (
     <Router>
@@ -27,26 +42,19 @@ function App() {
           path="/signup"
           element={<AuthPage mode="signup" socket={socket} server={server} />}
         />
-        <Route path="/main" element={<Main />} />
+        <Route
+          path="/main"
+          element={<Main user={user} isAdmin={isAdmin} onLogin={handleLogin} />}
+        />
         <Route path="/song" element={<LivePage socket={socket} />} />
       </Routes>
     </Router>
   );
 }
 
-function Main() {
+function Main({ user, isAdmin, onLogin }) {
   const navigate = useNavigate(); // Used to navigate to the main page after logging in
 
-  //Determine states based on session storage (Makes it so that data does not disappear upon reloading page)
-  const [user, setUser] = useState(() => {
-    const savedUser = sessionStorage.getItem("user");
-    return savedUser ? JSON.parse(savedUser) : {};
-  });
-
-  const [isAdmin, setIsAdmin] = useState(() => {
-    const savedIsAdmin = sessionStorage.getItem("isAdmin");
-    return savedIsAdmin ? JSON.parse(savedIsAdmin) : false;
-  });
   const [song, setSong] = useState("");
 
   function handleSongSelect(selectedSong) {
@@ -55,7 +63,6 @@ function Main() {
 
   useEffect(() => {
     socket.on("change-page", (song) => {
-      console.log(song);
       navigate("/song");
     });
   });
@@ -68,28 +75,25 @@ function Main() {
     socket.on("currentUser", (loggedUser) => {
       // An empty object means this user just logged in
       if (Object.keys(user).length === 0) {
-        setUser(loggedUser);
-        setIsAdmin(loggedUser.type === "admin");
+        onLogin(loggedUser, loggedUser.type === "admin");
       }
     });
-
-    window.addEventListener("beforeunload", () => {
+    const handleBeforeUnload = () => {
       sessionStorage.setItem("user", JSON.stringify(user));
       sessionStorage.setItem("isAdmin", JSON.stringify(isAdmin));
-    });
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
       // Clean up the event listener
-      window.removeEventListener("beforeunload", () => {
-        sessionStorage.setItem("user", JSON.stringify(user));
-        sessionStorage.setItem("isAdmin", JSON.stringify(isAdmin));
-      });
+      window.removeEventListener("beforeunload", handleBeforeUnload);
 
       // Clear sessionStorage when the user navigates away
-      sessionStorage.removeItem("user");
-      sessionStorage.removeItem("isAdmin");
+      // sessionStorage.removeItem("user");
+      // sessionStorage.removeItem("isAdmin");
     };
-  }, [user, isAdmin]);
+  }, [user, isAdmin, onLogin]);
   return (
     <>
       <h1>
