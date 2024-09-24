@@ -29,7 +29,7 @@ async function connectToDb() {
   }
 }
 
-connectToDb(); // Call this function to connect to the database
+await connectToDb(); // Call this function to connect to the database
 
 // Middleware
 //for preventing the browser's default behavior
@@ -55,7 +55,7 @@ app.post("/create-user", async (req, res) => {
 });
 
 // A map for tracking users in room
-const room = [];
+let room = [];
 app.post("/login", async (req, res) => {
   console.log(req.body);
   const formData = req.body;
@@ -69,7 +69,6 @@ app.post("/login", async (req, res) => {
 });
 
 io.on("connection", (socket) => {
-  console.log("A user connected");
   socket.on("joinRoom", (user) => {
     room.push(user);
     socket.emit("currentUser", user);
@@ -81,5 +80,9 @@ io.on("connection", (socket) => {
   });
   socket.on("quit-song", () => {
     io.emit("main-page");
+  });
+  socket.on("leaveRoom", (leavingUser) => {
+    room = room.filter((user) => user.username !== leavingUser.username);
+    console.log("Room content: ", room);
   });
 });

@@ -46,7 +46,10 @@ function App() {
           path="/main"
           element={<Main user={user} isAdmin={isAdmin} onLogin={handleLogin} />}
         />
-        <Route path="/song" element={<LivePage socket={socket} />} />
+        <Route
+          path="/song"
+          element={<LivePage socket={socket} user={user} isAdmin={isAdmin} />}
+        />
       </Routes>
     </Router>
   );
@@ -73,6 +76,7 @@ function Main({ user, isAdmin, onLogin }) {
 
   useEffect(() => {
     socket.on("currentUser", (loggedUser) => {
+      console.log("Received user", loggedUser);
       // An empty object means this user just logged in
       if (Object.keys(user).length === 0) {
         onLogin(loggedUser, loggedUser.type === "admin");
@@ -88,23 +92,36 @@ function Main({ user, isAdmin, onLogin }) {
     return () => {
       // Clean up the event listener
       window.removeEventListener("beforeunload", handleBeforeUnload);
-
-      // Clear sessionStorage when the user navigates away
-      // sessionStorage.removeItem("user");
-      // sessionStorage.removeItem("isAdmin");
     };
   }, [user, isAdmin, onLogin]);
   return (
     <>
-      <h1>
-        Hello {user.username} , you are {isAdmin ? "an admin" : "a player"}
-      </h1>
+      <Header user={user} isAdmin={isAdmin} />
       {isAdmin ? (
         <Search onSongSelect={handleSongSelect} />
       ) : (
         <h2>Waiting for next song...</h2>
       )}
     </>
+  );
+}
+
+function Header({ user, isAdmin }) {
+  const navigate = useNavigate();
+
+  function disconnect() {
+    socket.emit("leaveRoom", user);
+    sessionStorage.removeItem("user", JSON.stringify(user));
+    sessionStorage.removeItem("isAdmin", JSON.stringify(isAdmin));
+    navigate("/");
+  }
+  return (
+    <header>
+      <h1>
+        Hello {user.username} , you are {isAdmin ? "an admin" : "a player"}
+      </h1>
+      <button onClick={disconnect}>Disconnect</button>
+    </header>
   );
 }
 

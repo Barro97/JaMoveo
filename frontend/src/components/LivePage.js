@@ -424,12 +424,10 @@ const song = [
 ];
 const author = "The Beetles";
 const title = "Hey Jude";
-const isSinger = false;
-const isAdmin = true;
 
-function LivePage({ socket }) {
+function LivePage({ socket, user, isAdmin }) {
   const navigate = useNavigate();
-
+  const isSinger = user.instrument === "singer";
   const scrollRef = useRef(null);
 
   const [autoScroll, setAutoScroll] = useState(false);
