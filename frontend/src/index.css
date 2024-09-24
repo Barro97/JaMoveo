@@ -57,3 +57,61 @@ body {
 .form button:hover {
   background-color: #a40000; /* Slightly lighter red on hover */
 }
+
+/* live-page.css */
+
+.live-page {
+  background-color: #020280; /* Dark blue background */
+  color: #ffffff; /* White text for high contrast */
+  font-size: 1.5em; /* Large font size */
+  padding: 20px;
+}
+
+.song-title {
+  font-size: 2em;
+  color: #af0000; /* Dark red */
+  text-align: center;
+}
+
+.song-author {
+  font-size: 1.5em;
+  color: #af0000; /* Dark red */
+  text-align: center;
+}
+
+.song-content {
+  margin-top: 30px;
+}
+
+.chord {
+  color: #ffd700; /* Gold color for chords */
+  margin-right: 5px;
+}
+
+.auto-scroll-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #8b0000; /* Dark red */
+  color: #ffffff;
+  border: none;
+  padding: 15px;
+  border-radius: 50%;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+/* live-page.css */
+
+.quit-button {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background-color: #8b0000; /* Dark red */
+  color: #ffffff;
+  border: none;
+  padding: 15px;
+  border-radius: 50%;
+  font-size: 1em;
+  cursor: pointer;
+}
