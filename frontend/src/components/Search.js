@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-function Search() {
+
+function Search({ onSongSelect }) {
   const [query, setQuery] = useState("");
   const [songList, setSongList] = useState([
     "Shape of You",
@@ -70,7 +71,11 @@ function Search() {
       />
       <ul className="search-list">
         {filteredSongs.map((song, index) => (
-          <li key={index} className="search-list-item">
+          <li
+            key={index}
+            className="search-list-item"
+            onClick={() => onSongSelect(song)}
+          >
             {highlightMatch(song, query)}
           </li>
         ))}

@@ -75,4 +75,8 @@ io.on("connection", (socket) => {
     socket.emit("currentUser", user);
     console.log("Room content: ", room);
   });
+  socket.on("song-selected", (song) => {
+    console.log(`song selected:${song}`);
+    io.emit("change-page", song);
+  });
 });

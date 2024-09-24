@@ -1,8 +1,16 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
 import { io } from "socket.io-client";
 import AuthPage from "./components/AuthPage";
+import Search from "./components/Search";
+import LivePage from "./components/LivePage";
+
 const server = "http://localhost:5000";
 const socket = io("http://localhost:5000");
 
@@ -20,12 +28,15 @@ function App() {
           element={<AuthPage mode="signup" socket={socket} server={server} />}
         />
         <Route path="/main" element={<Main />} />
+        <Route path="/song" element={<LivePage />} />
       </Routes>
     </Router>
   );
 }
 
 function Main() {
+  const navigate = useNavigate(); // Used to navigate to the main page after logging in
+
   //Determine states based on session storage (Makes it so that data does not disappear upon reloading page)
   const [user, setUser] = useState(() => {
     const savedUser = sessionStorage.getItem("user");
@@ -36,6 +47,22 @@ function Main() {
     const savedIsAdmin = sessionStorage.getItem("isAdmin");
     return savedIsAdmin ? JSON.parse(savedIsAdmin) : false;
   });
+  const [song, setSong] = useState("");
+
+  function handleSongSelect(selectedSong) {
+    setSong(selectedSong);
+  }
+
+  useEffect(() => {
+    socket.on("change-page", (song) => {
+      console.log(song);
+      navigate("/song");
+    });
+  });
+
+  useEffect(() => {
+    if (song) socket.emit("song-selected", song);
+  }, [song]);
 
   useEffect(() => {
     socket.on("currentUser", (loggedUser) => {
@@ -64,9 +91,16 @@ function Main() {
     };
   }, [user, isAdmin]);
   return (
-    <h1>
-      Hello {user.username} , you are {isAdmin ? "an admin" : "a player"}
-    </h1>
+    <>
+      <h1>
+        Hello {user.username} , you are {isAdmin ? "an admin" : "a player"}
+      </h1>
+      {isAdmin ? (
+        <Search onSongSelect={handleSongSelect} />
+      ) : (
+        <h2>Waiting for next song...</h2>
+      )}
+    </>
   );
 }
 
