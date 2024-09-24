@@ -12,16 +12,22 @@ function Search() {
     "Sunflower",
     "Senorita",
     "Perfect",
-    // Add more song names as needed
   ]);
   const [filteredSongs, setFilteredSongs] = useState([]);
 
   useEffect(() => {
     const handleSearch = () => {
       if (query.trim() !== "") {
-        const results = songList.filter((song) =>
-          song.toLowerCase().includes(query.toLowerCase())
-        );
+        const results = songList
+          .filter((song) => song.toLowerCase().includes(query.toLowerCase()))
+          .sort((a, b) => {
+            const aStartsWith = a.toLowerCase().startsWith(query.toLowerCase());
+            const bStartsWith = b.toLowerCase().startsWith(query.toLowerCase());
+
+            if (aStartsWith && !bStartsWith) return -1; // a should come first
+            if (!aStartsWith && bStartsWith) return 1; // b should come first
+            return 0; // both start with or don't start with query
+          });
         setFilteredSongs(results);
       } else {
         setFilteredSongs([]);
