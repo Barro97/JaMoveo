@@ -68,9 +68,9 @@ body {
   padding: 30px;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center content horizontally */
-  justify-content: start; /* Center content vertically */
-  height: 100vh; /* Full viewport height */
+  align-items: center;
+  justify-content: start;
+  overflow-y: auto;
 }
 
 .song-title {
@@ -155,4 +155,35 @@ footer {
   height: 50px;
   background-color: transparent; /* Keep it invisible but still occupy space */
   margin-top: 20px; /* Add some extra space above the footer if needed */
+}
+
+.search-container {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 20px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+.search-list {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.search-list-item {
+  padding: 10px 0;
+  border-bottom: 1px solid #ccc;
+}
+
+.highlight {
+  background-color: yellow;
+  font-weight: bold;
 }

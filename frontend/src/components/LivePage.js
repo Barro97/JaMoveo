@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 const song = [
   [
     {
@@ -426,21 +426,44 @@ const title = "Hey Jude";
 const isSinger = false;
 const isAdmin = true;
 function LivePage() {
+  const scrollRef = useRef(null);
+
   const [autoScroll, setAutoScroll] = useState(false);
+  const scrollIntervalID = useRef(null);
+  const scrollSpeed = 1;
+  const scrollInterval = 20;
 
   useEffect(() => {
-    let scrollInterval;
-    if (autoScroll) {
-      scrollInterval = setInterval(() => {
-        window.scrollBy(0, 1); // Scroll down by 1 pixel
-      }, 50);
+    function startScroll() {
+      if (scrollIntervalID.current) return;
+      scrollIntervalID.current = setInterval(() => {
+        if (scrollRef.current) {
+          scrollRef.current.scrollTop += scrollSpeed;
+          console.log(scrollRef.current.scrollTop);
+        }
+      }, scrollInterval);
     }
-    return () => clearInterval(scrollInterval);
+
+    function stopScroll() {
+      if (scrollIntervalID.current) {
+        clearInterval(scrollIntervalID.current);
+        scrollIntervalID.current = null;
+      }
+    }
+    if (autoScroll) {
+      console.log("starting autoscroll");
+
+      startScroll();
+    } else stopScroll();
+    return () => {
+      console.log("ending autoscroll");
+      stopScroll();
+    };
   }, [autoScroll]);
 
   return (
     <>
-      <div className="live-page">
+      <div className="live-page" ref={scrollRef}>
         <h1 className="song-title">{title}</h1>
         <h2 className="song-author">By {author}</h2>
         {isAdmin && <button className="quit-button">Quit</button>}
