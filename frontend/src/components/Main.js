@@ -25,7 +25,13 @@ function Main({
 
   return (
     <>
-      <Header user={user} isAdmin={isAdmin} socket={socket} server={server} />
+      <Header
+        user={user}
+        isAdmin={isAdmin}
+        socket={socket}
+        server={server}
+        onLogin={onLogin}
+      />
       {isAdmin ? (
         <Search onSongSelect={onSongSelect} />
       ) : (

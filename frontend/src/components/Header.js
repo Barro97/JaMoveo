@@ -1,12 +1,13 @@
 import { useNavigate } from "react-router-dom";
 
-function Header({ user, isAdmin, socket, server }) {
+function Header({ user, isAdmin, socket, onLogin, server }) {
   const navigate = useNavigate();
 
   function disconnect() {
     socket.emit("leaveRoom", user);
-    sessionStorage.removeItem("user");
-    sessionStorage.removeItem("isAdmin");
+    sessionStorage.removeItem("user", JSON.stringify(user));
+    sessionStorage.removeItem("isAdmin", JSON.stringify(isAdmin));
+    onLogin({}, false);
     navigate("/");
   }
   async function handleCopyAdminSignup() {

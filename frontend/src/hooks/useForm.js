@@ -27,6 +27,8 @@ function useForm(socket, initialValues, server, route) {
         // Login route requires additional logic
         socket.emit("joinRoom", response.data.user);
         navigate("/main");
+      } else {
+        navigate("/");
       }
     } catch (error) {
       console.log(error);

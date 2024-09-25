@@ -15,9 +15,9 @@ function useSocketListeners({ user, onLogin, onSongSelect, song, socket }) {
     });
 
     socket.on("currentUser", (loggedUser) => {
-      console.log("Received user", loggedUser);
-
       // An empty object means this user just logged in
+      console.log(user);
+      console.log("Received user", loggedUser);
       if (Object.keys(user).length === 0) {
         onLogin(loggedUser, loggedUser.type === "admin");
       }
