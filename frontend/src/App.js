@@ -54,6 +54,7 @@ function App() {
               song={song}
               isSong={isSong}
               socket={socket}
+              server={server}
             />
           }
         />
