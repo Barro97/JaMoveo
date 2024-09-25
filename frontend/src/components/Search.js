@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useMemo, useContext } from "react";
 import songs from "../songs";
 import UserContext from "../UserContext";
 import useSearch from "../hooks/useSearch";
@@ -6,7 +6,7 @@ import useSearch from "../hooks/useSearch";
 function Search() {
   const { handleSongSelect } = useContext(UserContext);
   const [query, setQuery] = useState("");
-  const songList = songs.map((song) => song.name); // since the song db is hardcoded there is no need for state
+  const songList = useMemo(() => songs.map((song) => song.name), [songs]); // since the song db is hardcoded there is no need for state
   const filteredSongs = useSearch(songList, query); // A custom hook for handling search
 
   const handleChange = (e) => {
