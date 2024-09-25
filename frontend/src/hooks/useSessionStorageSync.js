@@ -1,20 +1,16 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
-function useSessionStorageSync(user, isAdmin, socket) {
+// A hook that determines weather the state needs to be set to the default value or to the value that is set in the session memory
+// This hook allows for reloading the page without losing user data 
+function useSessionStorageSync(key, defaultValue) {
+  const [state, setState] = useState(() => {
+    const savedValue = sessionStorage.getItem(key);
+    return savedValue ? JSON.parse(savedValue) : defaultValue;
+  }); 
   useEffect(() => {
-    const handleBeforeUnload = () => {
-      // stores current user info when reloading
-      sessionStorage.setItem("user", JSON.stringify(user));
-      sessionStorage.setItem("isAdmin", JSON.stringify(isAdmin));
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      // Clean up the event listener
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [user, isAdmin, socket]);
+    sessionStorage.setItem(key, JSON.stringify(state));
+  }, [key, state]);
+  return [state, setState];
 }
 
 export default useSessionStorageSync;

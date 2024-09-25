@@ -1,44 +1,22 @@
 // App.js
-import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { io } from "socket.io-client";
 import AuthPage from "./components/AuthPage";
 import LivePage from "./components/LivePage";
 import Main from "./components/Main";
 import UserContext from "./UserContext";
+import useSessionStorageSync from "./hooks/useSessionStorageSync";
 
 const server = "http://localhost:5000";
 const socket = io(server);
 
 function App() {
   // Initialize states from sessionStorage
-  const [user, setUser] = useState(() => {
-    const savedUser = sessionStorage.getItem("user");
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
-
-  const [isAdmin, setIsAdmin] = useState(() => {
-    const savedIsAdmin = sessionStorage.getItem("isAdmin");
-    return savedIsAdmin ? JSON.parse(savedIsAdmin) : false;
-  });
-
-  const [song, setSong] = useState(() => {
-    const savedSong = sessionStorage.getItem("song");
-    return savedSong ? JSON.parse(savedSong) : null;
-  });
-
-  const [isSong, setIsSong] = useState(() => {
-    const savedIsSong = sessionStorage.getItem("isSong");
-    return savedIsSong ? JSON.parse(savedIsSong) : false;
-  });
-
-  // Save to sessionStorage on change
-  useEffect(() => {
-    sessionStorage.setItem("user", JSON.stringify(user));
-    sessionStorage.setItem("isAdmin", JSON.stringify(isAdmin));
-    sessionStorage.setItem("song", JSON.stringify(song));
-    sessionStorage.setItem("isSong", JSON.stringify(isSong));
-  }, [user, isAdmin, song, isSong]);
+  // Created useSessionStorageSync hook for reusability
+  const [user, setUser] = useSessionStorageSync("user", null);
+  const [isAdmin, setIsAdmin] = useSessionStorageSync("isAdmin", false);
+  const [song, setSong] = useSessionStorageSync("song", null);
+  const [isSong, setIsSong] = useSessionStorageSync("isSong", false);
 
   function handleSongSelect(selectedSong) {
     setSong(selectedSong);
@@ -50,7 +28,7 @@ function App() {
     setIsAdmin(admin);
   }
 
-  // Context value
+  // Context value - all of the states that the app needs
   const contextValue = {
     user,
     setUser,
@@ -67,6 +45,7 @@ function App() {
   };
 
   return (
+    // The context helps with state management and eliminated prop drilling
     <UserContext.Provider value={contextValue}>
       <Router>
         <Routes>
