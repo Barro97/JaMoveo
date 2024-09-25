@@ -49,10 +49,10 @@ app.post("/create-user", async (req, res) => {
   try {
     const user = await users.findOne({ username: formData.username });
     if (!user) {
+      console.log(formData);
       await users.insertOne(formData);
       res.send({ message: "Form data received:", data: formData });
     } else {
-      console.log(user);
       res.send({ message: "User name taken" });
     }
   } catch (err) {

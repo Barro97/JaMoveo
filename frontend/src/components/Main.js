@@ -10,7 +10,6 @@ function Main() {
     useContext(UserContext);
 
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   useSocketListeners(); // Now uses context internally
 
@@ -23,11 +22,7 @@ function Main() {
     if (user && Object.keys(user).length !== 0) {
       setLoading(false);
     }
-    //  else {
-    //   // If user is not logged in, redirect to login page
-    //   navigate("/");
-    // }
-  }, [user, navigate]);
+  }, [user]);
 
   if (loading) {
     return <div>Loading user data...</div>;
