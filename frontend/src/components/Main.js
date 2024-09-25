@@ -1,6 +1,6 @@
 import Search from "./Search";
 import Header from "./Header";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useSocketListeners from "../hooks/useSocketListeners";
 import useSessionStorageSync from "../hooks/useSessionStorageSync";
 
@@ -14,6 +14,8 @@ function Main({
   socket,
   server,
 }) {
+  const [loading, setLoading] = useState(true);
+
   //Custom hooks to improve readability
   useSocketListeners({ user, onLogin, onSongSelect, song, socket }); //Handles socket events
   useSessionStorageSync(user, isAdmin, socket); // Handles user info upon reload
@@ -22,6 +24,15 @@ function Main({
   useEffect(() => {
     if (song && isSong) socket.emit("song-selected", song);
   }, [song, isSong, socket]);
+  useEffect(() => {
+    if (Object.keys(user).length !== 0) {
+      setLoading(false);
+    }
+  }, [user]);
+
+  if (loading) {
+    return <div>Loading user data...</div>;
+  }
 
   return (
     <>

@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 
 function useSocketListeners({ user, onLogin, onSongSelect, song, socket }) {
   const navigate = useNavigate(); // Used to navigate to the main page after logging in
-
   useEffect(() => {
     socket.on("change-page", (selectedSong) => {
       // Causes all users to navigate to song page
