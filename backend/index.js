@@ -2,7 +2,7 @@ import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import cors from "cors";
-import { MongoClient } from "mongodb";
+import { connectToDb, getDb } from "./db.js";
 import dotenv from "dotenv";
 
 dotenv.config(); // Load environment variables
@@ -17,21 +17,8 @@ const io = new Server(httpServer, {
   },
 });
 
-const url = process.env.MONGODB_URI;
-const client = new MongoClient(url);
-let db;
-// Function to connect to the MongoDB database
-async function connectToDb() {
-  try {
-    await client.connect();
-    db = client.db("jaMoveo"); // Using your actual DB name "Code-togetherDB"
-    console.log("Connected to Jamoveo!");
-  } catch (err) {
-    console.error("Failed to connect to MongoDB", err);
-  }
-}
-
 await connectToDb(); // Call this function to connect to the database
+let db = getDb();
 
 // Middleware
 //for preventing the browser's default behavior
