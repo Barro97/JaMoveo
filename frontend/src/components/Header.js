@@ -26,18 +26,23 @@ function Header() {
   return (
     <header>
       <div className="header-content">
-        <h1>
-          Welcome, {user.username}{" "}
-          <span className="role-text">{isAdmin ? "admin" : "player"}</span>
-        </h1>
-        {isAdmin && (
-          <button className="disconnect-button" onClick={handleCopyAdminSignup}>
-            Invite Admin
+        <h1>Welcome, {user.username}</h1>
+        <div>
+          <h1>
+            Role:
+            <span className="role-text"> {isAdmin ? "admin" : "player"}</span>
+          </h1>
+        </div>
+        <div className="header-buttons">
+          {isAdmin && (
+            <button className="button " onClick={handleCopyAdminSignup}>
+              Invite Admin
+            </button>
+          )}
+          <button className="button " onClick={disconnect}>
+            Disconnect
           </button>
-        )}
-        <button className="disconnect-button" onClick={disconnect}>
-          Disconnect
-        </button>
+        </div>
       </div>
     </header>
   );
