@@ -30,7 +30,7 @@ function Header() {
         <div>
           <h1>
             Role:
-            <span className="role-text"> {isAdmin ? "admin" : "player"}</span>
+            <span className="role-text"> {isAdmin ? "Admin" : "Player"}</span>
           </h1>
         </div>
         <div className="header-buttons">
