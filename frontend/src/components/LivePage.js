@@ -2,11 +2,37 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useInterval } from "react-use";
 
-function LivePage({ socket, user, isAdmin, song, handleSongSelect }) {
+function LivePage({
+  socket,
+  user,
+  isAdmin,
+  handleSongSelect,
+  song: initialSong,
+}) {
   const navigate = useNavigate();
-  const isSinger = user.instrument === "singer";
+  const isSinger = user?.instrument === "singer";
 
   const [autoScroll, setAutoScroll] = useState(false);
+
+  const [song, setSong] = useState(() => {
+    const savedSong = sessionStorage.getItem("song");
+    return initialSong || (savedSong && JSON.parse(savedSong));
+  });
+
+  useEffect(() => {
+    if (!song) {
+      navigate("/main");
+    }
+    function handleBeforeUnload() {
+      sessionStorage.setItem("song", JSON.stringify(song));
+    }
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  });
 
   useInterval(
     () => {
@@ -40,9 +66,9 @@ function LivePage({ socket, user, isAdmin, song, handleSongSelect }) {
           </button>
         )}
         <div className="song-content">
-          {song.content.map((line, index) => (
+          {song?.content.map((line, index) => (
             <div key={index} className="song-line">
-              {line.map((word, idx) => (
+              {line?.map((word, idx) => (
                 <div key={idx} className="word-chord-pair">
                   {!isSinger && (
                     <span className="chord">

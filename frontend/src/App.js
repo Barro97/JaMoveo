@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, createContext } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { io } from "socket.io-client";
 import AuthPage from "./components/AuthPage";
@@ -7,7 +7,6 @@ import Main from "./components/Main";
 
 const server = "http://localhost:5000";
 const socket = io("http://localhost:5000");
-
 function App() {
   //Determine states based on session storage (Makes it so that data does not disappear upon reloading page)
   const [user, setUser] = useState(() => {
