@@ -1,44 +1,19 @@
 import { useState, useEffect, useContext } from "react";
 import songs from "../songs";
 import UserContext from "../UserContext";
+import useSearch from "../hooks/useSearch";
 
 function Search() {
   const { handleSongSelect } = useContext(UserContext);
   const [query, setQuery] = useState("");
-  const [songList, setSongList] = useState([]);
-  const [filteredSongs, setFilteredSongs] = useState([]);
-
-  useEffect(() => {
-    const list = songs.map((song) => song.name);
-    setSongList(list);
-  }, []);
-
-  useEffect(() => {
-    const handleSearch = () => {
-      if (query.trim() !== "") {
-        const results = songList
-          .filter((song) => song.toLowerCase().includes(query.toLowerCase()))
-          .sort((a, b) => {
-            const aStartsWith = a.toLowerCase().startsWith(query.toLowerCase());
-            const bStartsWith = b.toLowerCase().startsWith(query.toLowerCase());
-
-            if (aStartsWith && !bStartsWith) return -1; // a should come first
-            if (!aStartsWith && bStartsWith) return 1; // b should come first
-            return 0; // both start with or don't start with query
-          });
-        setFilteredSongs(results);
-      } else {
-        setFilteredSongs([]);
-      }
-    };
-
-    handleSearch();
-  }, [query, songList]);
+  const songList = songs.map((song) => song.name); // since the song db is hardcoded there is no need for state
+  const filteredSongs = useSearch(songList, query); // A custom hook for handling search
 
   const handleChange = (e) => {
     setQuery(e.target.value);
   };
 
+  // A function that highlights text that matches the query
   const highlightMatch = (song, query) => {
     if (!query) return song;
 
