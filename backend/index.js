@@ -62,6 +62,9 @@ app.post("/login", async (req, res) => {
   const users = db.collection("Users");
   try {
     const user = await users.findOne(formData);
+    // if (!user) {
+    //   res.send({ message: "User not found:", user: false });
+    // }
     res.send({ message: "User found:", user: user });
   } catch (err) {
     console.log("Error, user not found:", err);

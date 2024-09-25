@@ -17,7 +17,7 @@ function AuthPage({ mode, socket, server }) {
       };
   const isValid = type === "Admin" || type === "Player" || isLogin;
 
-  const { formData, handleChange, handleSubmit } = useForm(
+  const { formData, handleChange, handleSubmit, userNotFound } = useForm(
     socket,
     initialValues,
     server,
