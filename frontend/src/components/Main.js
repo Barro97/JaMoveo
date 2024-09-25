@@ -1,31 +1,32 @@
 import { useEffect } from "react";
 import Search from "./Search";
 import { useNavigate } from "react-router-dom";
+import useSocketListeners from "../hooks/useSocketListeners";
 
 function Main({ user, isAdmin, onLogin, onSongSelect, song, isSong, socket }) {
-  const navigate = useNavigate(); // Used to navigate to the main page after logging in
-
+  //   const navigate = useNavigate(); // Used to navigate to the main page after logging in
+  useSocketListeners({ user, onLogin, onSongSelect, song, socket });
   useEffect(() => {
     if (song && isSong) socket.emit("song-selected", song);
   }, [song, isSong, socket]);
 
-  useEffect(() => {
-    socket.on("change-page", (selectedSong) => {
-      if (!song) {
-        onSongSelect(selectedSong);
-      }
-      navigate("/song");
-    });
-  });
+  //   useEffect(() => {
+  //     socket.on("change-page", (selectedSong) => {
+  //       if (!song) {
+  //         onSongSelect(selectedSong);
+  //       }
+  //       navigate("/song");
+  //     });
+  //   });
 
   useEffect(() => {
-    socket.on("currentUser", (loggedUser) => {
-      console.log("Received user", loggedUser);
-      // An empty object means this user just logged in
-      if (Object.keys(user).length === 0) {
-        onLogin(loggedUser, loggedUser.type === "admin");
-      }
-    });
+    // socket.on("currentUser", (loggedUser) => {
+    //   console.log("Received user", loggedUser);
+    // An empty object means this user just logged in
+    //   if (Object.keys(user).length === 0) {
+    //     onLogin(loggedUser, loggedUser.type === "admin");
+    //   }
+    // });
     const handleBeforeUnload = () => {
       sessionStorage.setItem("user", JSON.stringify(user));
       sessionStorage.setItem("isAdmin", JSON.stringify(isAdmin));
