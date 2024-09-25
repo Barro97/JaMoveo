@@ -3,6 +3,9 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import cors from "cors";
 import { MongoClient } from "mongodb";
+import dotenv from "dotenv";
+
+dotenv.config(); // Load environment variables
 
 const app = express();
 const httpServer = createServer(app);
@@ -14,8 +17,7 @@ const io = new Server(httpServer, {
   },
 });
 
-const url =
-  "mongodb+srv://rosenthb:bO5JHYTfa5hFSN3o@cluster0.j8ajp.mongodb.net/jaMoveo?retryWrites=true&w=majority&appName=Cluster0";
+const url = process.env.MONGODB_URI;
 const client = new MongoClient(url);
 let db;
 // Function to connect to the MongoDB database
