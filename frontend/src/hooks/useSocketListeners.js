@@ -6,7 +6,9 @@ function useSocketListeners({ user, onLogin, onSongSelect, song, socket }) {
 
   useEffect(() => {
     socket.on("change-page", (selectedSong) => {
+      // Causes all users to navigate to song page
       if (!song) {
+        // Makes sure all users register the selected song
         onSongSelect(selectedSong);
       }
       navigate("/song");
@@ -14,6 +16,7 @@ function useSocketListeners({ user, onLogin, onSongSelect, song, socket }) {
 
     socket.on("currentUser", (loggedUser) => {
       console.log("Received user", loggedUser);
+
       // An empty object means this user just logged in
       if (Object.keys(user).length === 0) {
         onLogin(loggedUser, loggedUser.type === "admin");
@@ -21,6 +24,7 @@ function useSocketListeners({ user, onLogin, onSongSelect, song, socket }) {
     });
 
     return () => {
+      //Cleanup
       socket.off("change-page");
       socket.off("currentUser");
     };

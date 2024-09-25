@@ -1,11 +1,5 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  useNavigate,
-} from "react-router-dom";
+import { useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { io } from "socket.io-client";
 import AuthPage from "./components/AuthPage";
 import LivePage from "./components/LivePage";
