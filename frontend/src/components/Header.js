@@ -3,8 +3,7 @@ import { useContext } from "react";
 import UserContext from "../UserContext";
 
 function Header() {
-  const { user, isAdmin, socket, server, handleLogin } =
-    useContext(UserContext);
+  const { user, isAdmin, socket, handleLogin } = useContext(UserContext);
 
   const navigate = useNavigate();
 
@@ -17,7 +16,7 @@ function Header() {
 
   async function handleCopyAdminSignup() {
     try {
-      await navigator.clipboard.writeText(`${server}/signup/Admin`);
+      await navigator.clipboard.writeText(`http://localhost:3000/signup/Admin`);
       alert("Admin signup link copied");
     } catch (err) {
       console.log("Failed to copy link", err);
