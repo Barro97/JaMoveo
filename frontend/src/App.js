@@ -40,7 +40,7 @@ function App() {
           element={<AuthPage mode="login" socket={socket} server={server} />}
         />
         <Route
-          path="/signup"
+          path="/signup/:type"
           element={<AuthPage mode="signup" socket={socket} server={server} />}
         />
         <Route

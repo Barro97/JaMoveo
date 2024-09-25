@@ -11,7 +11,7 @@ function Header({ user, isAdmin, socket, server }) {
   }
   async function handleCopyAdminSignup() {
     try {
-      await navigator.clipboard.writeText(`${server}/admin`);
+      await navigator.clipboard.writeText(`http://localhost:3000/signup/Admin`);
       alert("admin signup link copied");
     } catch (err) {
       console.log("failed to copy link", err);

@@ -9,7 +9,7 @@ export function Form({ children, handleSubmit, type }) {
         <button type="submit">{type}</button>
         {type === "Log In" && (
           <p>
-            Haven't signed up yet? <Link to="/signup">sign up</Link>
+            Haven't signed up yet? <Link to="/signup/Player">sign up</Link>
           </p>
         )}
       </form>
