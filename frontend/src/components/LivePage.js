@@ -12,20 +12,21 @@ function LivePage() {
 
   const [autoScroll, setAutoScroll] = useState(false);
 
+  // Redirect to login if user is not authenticated - prevents a bug
   useEffect(() => {
     if (!user || Object.keys(user).length === 0) {
-      // Redirect to login if user is not authenticated
       navigate("/");
     }
   }, [user, navigate]);
 
+  // Redirect to main if no song is selected
   useEffect(() => {
     if (!song || !song.content) {
-      // Redirect to main if no song is selected
       navigate("/main");
     }
   }, [song, navigate]);
 
+  // Scroll was made possible by importing the react-use library
   useInterval(
     () => {
       window.scrollBy(0, 2); // Scrolls 2 pixels vertically
@@ -94,6 +95,7 @@ function LivePage() {
 }
 
 function Footer() {
+  // Added this comp because maybe in the future we will want to add more ui elements
   return <footer></footer>;
 }
 
