@@ -1,21 +1,26 @@
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import UserContext from "../UserContext";
 
-function Header({ user, isAdmin, socket, onLogin, server }) {
+function Header() {
+  const { user, isAdmin, socket, server, handleLogin } =
+    useContext(UserContext);
+
   const navigate = useNavigate();
 
   function disconnect() {
     socket.emit("leaveRoom", user);
-    sessionStorage.removeItem("user", JSON.stringify(user));
-    sessionStorage.removeItem("isAdmin", JSON.stringify(isAdmin));
-    onLogin({}, false);
+    sessionStorage.clear();
+    handleLogin(null, false); // Set user to null
     navigate("/");
   }
+
   async function handleCopyAdminSignup() {
     try {
-      await navigator.clipboard.writeText(`http://localhost:3000/signup/Admin`);
-      alert("admin signup link copied");
+      await navigator.clipboard.writeText(`${server}/signup/Admin`);
+      alert("Admin signup link copied");
     } catch (err) {
-      console.log("failed to copy link", err);
+      console.log("Failed to copy link", err);
     }
   }
 

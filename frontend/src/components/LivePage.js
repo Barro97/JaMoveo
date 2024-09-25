@@ -1,38 +1,30 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useInterval } from "react-use";
+import UserContext from "../UserContext";
 
-function LivePage({
-  socket,
-  user,
-  isAdmin,
-  handleSongSelect,
-  song: initialSong,
-}) {
+function LivePage() {
+  const { user, isAdmin, song, socket, setSong, setIsSong } =
+    useContext(UserContext);
+
   const navigate = useNavigate();
   const isSinger = user?.instrument === "singer";
 
   const [autoScroll, setAutoScroll] = useState(false);
 
-  const [song, setSong] = useState(() => {
-    const savedSong = sessionStorage.getItem("song");
-    return initialSong || (savedSong && JSON.parse(savedSong));
-  });
+  useEffect(() => {
+    if (!user || Object.keys(user).length === 0) {
+      // Redirect to login if user is not authenticated
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   useEffect(() => {
-    if (!song) {
+    if (!song || !song.content) {
+      // Redirect to main if no song is selected
       navigate("/main");
     }
-    function handleBeforeUnload() {
-      sessionStorage.setItem("song", JSON.stringify(song));
-    }
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    // Clean up the event listener on component unmount
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  });
+  }, [song, navigate]);
 
   useInterval(
     () => {
@@ -51,10 +43,21 @@ function LivePage({
 
   useEffect(() => {
     socket.on("main-page", () => {
-      handleSongSelect("", false);
+      setSong(null);
+      setIsSong(false);
       navigate("/main");
     });
-  });
+
+    // Clean up the socket listener
+    return () => {
+      socket.off("main-page");
+    };
+  }, [socket, navigate, setSong, setIsSong]);
+
+  if (!song || !song.content) {
+    return <div>Loading song data...</div>;
+  }
+
   return (
     <>
       <div className="live-page">
@@ -66,14 +69,13 @@ function LivePage({
           </button>
         )}
         <div className="song-content">
-          {song?.content.map((line, index) => (
+          {song.content.map((line, index) => (
             <div key={index} className="song-line">
-              {line?.map((word, idx) => (
+              {line.map((word, idx) => (
                 <div key={idx} className="word-chord-pair">
                   {!isSinger && (
                     <span className="chord">
-                      {" "}
-                      {word.chords ? word.chords : ""}{" "}
+                      {word.chords ? word.chords : ""}
                     </span>
                   )}
                   <span className="lyrics"> {word.lyrics} </span>
@@ -94,4 +96,5 @@ function LivePage({
 function Footer() {
   return <footer></footer>;
 }
+
 export default LivePage;

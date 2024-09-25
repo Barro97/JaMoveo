@@ -1,17 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import songs from "../songs";
+import UserContext from "../UserContext";
 
-function Search({ onSongSelect }) {
+function Search() {
+  const { handleSongSelect } = useContext(UserContext);
   const [query, setQuery] = useState("");
   const [songList, setSongList] = useState([]);
   const [filteredSongs, setFilteredSongs] = useState([]);
 
   useEffect(() => {
-    let list = [];
-    list = songs.map((song) => {
-      return song.name;
-    });
-    console.log(list);
+    const list = songs.map((song) => song.name);
     setSongList(list);
   }, []);
 
@@ -69,19 +67,16 @@ function Search({ onSongSelect }) {
         className="search-input"
       />
       <ul className="search-list">
-        {filteredSongs.map((song, index) => (
+        {filteredSongs.map((songName, index) => (
           <li
             key={index}
             className="search-list-item"
-            onClick={() =>
-              onSongSelect(
-                songs.find((songFromArr) => {
-                  return songFromArr.name === song;
-                })
-              )
-            }
+            onClick={() => {
+              const selectedSong = songs.find((song) => song.name === songName);
+              handleSongSelect(selectedSong);
+            }}
           >
-            {highlightMatch(song, query)}
+            {highlightMatch(songName, query)}
           </li>
         ))}
       </ul>

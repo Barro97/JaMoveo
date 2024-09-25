@@ -2,11 +2,16 @@ import { useParams } from "react-router-dom";
 import { Field } from "./Field";
 import { Form } from "./Form";
 import useForm from "../hooks/useForm";
+import { useContext } from "react";
+import UserContext from "../UserContext";
 
-function AuthPage({ mode, socket, server }) {
+function AuthPage({ mode }) {
   const { type } = useParams();
-  const adminSignup = type === "Admin" ? true : false;
-  const isLogin = mode === "login"; // A bool to determine conditional rendering and submission logic
+  const { socket, server, handleLogin } = useContext(UserContext);
+
+  const adminSignup = type === "Admin";
+  const isLogin = mode === "login"; // Determines conditional rendering and submission logic
+
   const initialValues = isLogin
     ? { username: "", password: "" }
     : {
@@ -15,13 +20,15 @@ function AuthPage({ mode, socket, server }) {
         instrument: "",
         type: adminSignup ? "admin" : "player",
       };
+
   const isValid = type === "Admin" || type === "Player" || isLogin;
 
-  const { formData, handleChange, handleSubmit, userNotFound } = useForm(
+  const { formData, handleChange, handleSubmit } = useForm(
     socket,
     initialValues,
     server,
-    isLogin ? "login" : "create-user"
+    isLogin ? "login" : "create-user",
+    handleLogin // Pass handleLogin to update context upon successful login
   );
 
   return isValid ? (

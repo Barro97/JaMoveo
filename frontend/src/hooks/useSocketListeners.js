@@ -1,33 +1,30 @@
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import UserContext from "../UserContext";
 
-function useSocketListeners({ user, onLogin, onSongSelect, song, socket }) {
-  const navigate = useNavigate(); // Used to navigate to the main page after logging in
+function useSocketListeners() {
+  const { socket, user, song, handleLogin, handleSongSelect } =
+    useContext(UserContext);
+  const navigate = useNavigate();
+
   useEffect(() => {
     socket.on("change-page", (selectedSong) => {
-      // Causes all users to navigate to song page
-      if (!song) {
-        // Makes sure all users register the selected song
-        onSongSelect(selectedSong);
-      }
+      // Ensures all users register the selected song
+      handleSongSelect(selectedSong);
       navigate("/song");
     });
 
     socket.on("currentUser", (loggedUser) => {
-      // An empty object means this user just logged in
-      console.log(user);
-      console.log("Received user", loggedUser);
-      if (Object.keys(user).length === 0) {
-        onLogin(loggedUser, loggedUser.type === "admin");
-      }
+      // Updates user state upon receiving current user data
+      handleLogin(loggedUser, loggedUser.type === "admin");
     });
 
+    // Cleanup
     return () => {
-      //Cleanup
       socket.off("change-page");
       socket.off("currentUser");
     };
-  }, [song, onSongSelect, onLogin, user, navigate, socket]);
+  }, [handleSongSelect, handleLogin, navigate, socket]);
 }
 
 export default useSocketListeners;
