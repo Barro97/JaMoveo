@@ -1,23 +1,17 @@
 import { useEffect, useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
 import UserContext from "../UserContext";
 import Search from "./Search";
 import Header from "./Header";
 import useSocketListeners from "../hooks/useSocketListeners";
 
 function Main() {
-  const { user, isAdmin, song, isSong, socket, handleLogin, handleSongSelect } =
-    useContext(UserContext);
-
+  const { user, isAdmin } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
 
-  useSocketListeners(); // Now uses context internally
+  // A custom hook for grouping all socket listeners
+  useSocketListeners();
 
-  // Emit socket event after admin selects a song
-  useEffect(() => {
-    if (song && isSong) socket.emit("song-selected", song);
-  }, [song, isSong, socket]);
-
+  // Make sure page isn't loaded until data is fetched
   useEffect(() => {
     if (user && Object.keys(user).length !== 0) {
       setLoading(false);
