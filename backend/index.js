@@ -47,8 +47,14 @@ app.post("/create-user", async (req, res) => {
   const formData = req.body;
   const users = db.collection("Users");
   try {
-    await users.insertOne(formData);
-    res.send({ message: "Form data received:", data: formData });
+    const user = await users.findOne({ username: formData.username });
+    if (!user) {
+      await users.insertOne(formData);
+      res.send({ message: "Form data received:", data: formData });
+    } else {
+      console.log(user);
+      res.send({ message: "User name taken" });
+    }
   } catch (err) {
     console.log("error", err);
   }
@@ -62,9 +68,7 @@ app.post("/login", async (req, res) => {
   const users = db.collection("Users");
   try {
     const user = await users.findOne(formData);
-    // if (!user) {
-    //   res.send({ message: "User not found:", user: false });
-    // }
+
     res.send({ message: "User found:", user: user });
   } catch (err) {
     console.log("Error, user not found:", err);

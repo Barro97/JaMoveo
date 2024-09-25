@@ -20,12 +20,16 @@ function useForm(socket, initialValues, server, route) {
     e.preventDefault();
     try {
       const response = await axios.post(`${server}/${route}`, formData); // Makes a request to the server based on which form was submitted
-      console.log("response:", response.data.user);
+      console.log("response:", response.data);
       setFormData(initialValues);
-      if (!response.data.user) {
-        alert("No such user");
+      if (response.data.message === "User name taken") {
+        alert(response.data.message);
         return;
       } else if (route === "login") {
+        if (!response.data.user) {
+          alert("No such user");
+          return;
+        }
         // Login route requires additional logic
         socket.emit("joinRoom", response.data.user);
         navigate("/main");
