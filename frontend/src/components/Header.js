@@ -16,7 +16,9 @@ function Header() {
 
   async function handleCopyAdminSignup() {
     try {
-      await navigator.clipboard.writeText(`http://localhost:3000/signup/Admin`);
+      await navigator.clipboard.writeText(
+        `${process.env.REACT_APP_CLIENT_URL}/signup/Admin`
+      );
       alert("Admin signup link copied");
     } catch (err) {
       console.log("Failed to copy link", err);
