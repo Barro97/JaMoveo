@@ -7,7 +7,7 @@ import Main from "./components/Main";
 import UserContext from "./UserContext";
 import useSessionStorageSync from "./hooks/useSessionStorageSync";
 
-const server = "http://localhost:5000";
+const server = process.env.REACT_APP_BACKEND_URL;
 const socket = io(server);
 
 function App() {
